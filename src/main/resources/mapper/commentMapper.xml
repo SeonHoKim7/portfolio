@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ourstyle.portfolio.dao.CommentMapper">
+
+        <!-- 자유게시판 처리 -->
+
+    <delete id="deleteAll" parameterType="int">
+        DELETE FROM comment
+        WHERE  bno = #{bno}
+    </delete>
+
+    <select id="count" parameterType="int" resultType="int">
+        SELECT count(*) FROM comment
+        WHERE  bno = #{bno}
+    </select>
+
+    <delete id="delete" parameterType="map">
+        DELETE FROM comment WHERE cno = #{cno} AND commenter = #{commenter}
+    </delete>
+
+    <insert id="insert" parameterType="CommentDto">
+        INSERT INTO comment
+            (bno, pcno, comment, commenter, reg_date, up_date)
+        VALUES
+            (#{bno}, #{pcno}, #{comment}, #{commenter}, now(), now())
+    </insert>
+
+    <select id="selectAll" parameterType="int" resultType="CommentDto">
+        SELECT cno, bno, ifnull(pcno, cno) as pcno, comment, commenter, reg_date, up_date
+        FROM comment
+        WHERE bno = #{bno}
+        ORDER BY pcno ASC, cno ASC
+    </select>
+
+    <select id="select" parameterType="int" resultType="CommentDto">
+        SELECT cno, bno, pcno, comment, commenter, reg_date, up_date
+        FROM comment
+        WHERE cno = #{cno}
+    </select>
+
+    <update id="update" parameterType="CommentDto">
+        UPDATE comment
+        SET comment = #{comment}
+          , up_date = now()
+        WHERE cno = #{cno} and commenter = #{commenter}
+    </update>
+
+
+    <!-- 공지사항 처리 -->
+
+    <delete id="noticeDeleteAll" parameterType="int">
+        DELETE FROM noticecomment
+        WHERE  bno = #{bno}
+    </delete>
+
+    <select id="noticeCount" parameterType="int" resultType="int">
+        SELECT count(*) FROM noticecomment
+        WHERE  bno = #{bno}
+    </select>
+
+    <delete id="noticeDelete" parameterType="map">
+        DELETE FROM noticecomment WHERE cno = #{cno} AND commenter = #{commenter}
+    </delete>
+
+    <insert id="noticeInsert" parameterType="CommentDto">
+        INSERT INTO noticecomment
+            (bno, pcno, comment, commenter, reg_date, up_date)
+        VALUES
+            (#{bno}, #{pcno}, #{comment}, #{commenter}, now(), now())
+    </insert>
+
+    <select id="noticeSelectAll" parameterType="int" resultType="CommentDto">
+        SELECT cno, bno, ifnull(pcno, cno) as pcno, comment, commenter, reg_date, up_date
+        FROM noticecomment
+        WHERE bno = #{bno}
+        ORDER BY pcno ASC, cno ASC
+    </select>
+
+    <select id="noticeSelect" parameterType="int" resultType="CommentDto">
+        SELECT cno, bno, pcno, comment, commenter, reg_date, up_date
+        FROM noticecomment
+        WHERE cno = #{cno}
+    </select>
+
+    <update id="noticeUpdate" parameterType="CommentDto">
+        UPDATE noticecomment
+        SET comment = #{comment}
+          , up_date = now()
+        WHERE cno = #{cno} and commenter = #{commenter}
+    </update>
+
+
+    <!-- 정보공유 처리 -->
+
+
+    <delete id="infoDeleteAll" parameterType="int">
+        DELETE FROM infocomment
+        WHERE  bno = #{bno}
+    </delete>
+
+    <select id="infoCount" parameterType="int" resultType="int">
+        SELECT count(*) FROM infocomment
+        WHERE  bno = #{bno}
+    </select>
+
+    <delete id="infoDelete" parameterType="map">
+        DELETE FROM infocomment WHERE cno = #{cno} AND commenter = #{commenter}
+    </delete>
+
+    <insert id="infoInsert" parameterType="CommentDto">
+        INSERT INTO infocomment
+            (bno, pcno, comment, commenter, reg_date, up_date)
+        VALUES
+            (#{bno}, #{pcno}, #{comment}, #{commenter}, now(), now())
+    </insert>
+
+    <select id="infoSelectAll" parameterType="int" resultType="CommentDto">
+        SELECT cno, bno, ifnull(pcno, cno) as pcno, comment, commenter, reg_date, up_date
+        FROM infocomment
+        WHERE bno = #{bno}
+        ORDER BY pcno ASC, cno ASC
+    </select>
+
+    <select id="infoSelect" parameterType="int" resultType="CommentDto">
+        SELECT cno, bno, pcno, comment, commenter, reg_date, up_date
+        FROM infocomment
+        WHERE cno = #{cno}
+    </select>
+
+    <update id="infoUpdate" parameterType="CommentDto">
+        UPDATE infocomment
+        SET comment = #{comment}
+          , up_date = now()
+        WHERE cno = #{cno} and commenter = #{commenter}
+    </update>
+
+
+    <!-- 질문과답변 처리 -->
+
+
+    <delete id="questionDeleteAll" parameterType="int">
+        DELETE FROM questioncomment
+        WHERE  bno = #{bno}
+    </delete>
+
+    <select id="questionCount" parameterType="int" resultType="int">
+        SELECT count(*) FROM questioncomment
+        WHERE  bno = #{bno}
+    </select>
+
+    <delete id="questionDelete" parameterType="map">
+        DELETE FROM questioncomment WHERE cno = #{cno} AND commenter = #{commenter}
+    </delete>
+
+    <insert id="questionInsert" parameterType="CommentDto">
+        INSERT INTO questioncomment
+            (bno, pcno, comment, commenter, reg_date, up_date)
+        VALUES
+            (#{bno}, #{pcno}, #{comment}, #{commenter}, now(), now())
+    </insert>
+
+    <select id="questionSelectAll" parameterType="int" resultType="CommentDto">
+        SELECT cno, bno, ifnull(pcno, cno) as pcno, comment, commenter, reg_date, up_date
+        FROM questioncomment
+        WHERE bno = #{bno}
+        ORDER BY pcno ASC, cno ASC
+    </select>
+
+    <select id="questionSelect" parameterType="int" resultType="CommentDto">
+        SELECT cno, bno, pcno, comment, commenter, reg_date, up_date
+        FROM questioncomment
+        WHERE cno = #{cno}
+    </select>
+
+    <update id="questionUpdate" parameterType="CommentDto">
+        UPDATE questioncomment
+        SET comment = #{comment}
+          , up_date = now()
+        WHERE cno = #{cno} and commenter = #{commenter}
+    </update>
+
+</mapper>
+
+

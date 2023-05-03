@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ourstyle.portfolio.dao.BoardMapper">
+    <!-- 자유게시판 처리 -->
+
+    <select id="count" resultType="int">
+        SELECT count(*) FROM board
+    </select>
+
+    <delete id="deleteAll">
+        DELETE FROM board
+    </delete>
+
+    <delete id="delete" parameterType="map">
+        DELETE FROM board WHERE bno = #{bno} and writer = #{writer}
+    </delete>
+
+    <insert id="insert" parameterType="BoardDto">
+        INSERT INTO board
+            (title, content, writer)
+        VALUES
+            (#{title}, #{content}, #{writer})
+    </insert>
+
+    <select id="selectAll" resultType="BoardDto">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM board
+        ORDER BY reg_date DESC, bno DESC
+    </select>
+
+    <sql id="selectFromBoard">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM board
+    </sql>
+
+    <select id="select" parameterType="int" resultType="BoardDto">
+        <include refid="selectFromBoard"/>
+        WHERE bno = #{bno}
+    </select>
+
+    <select id="selectPage" parameterType="map" resultType="BoardDto">
+        <include refid="selectFromBoard"/>
+        ORDER BY reg_date DESC, bno DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <update id="update" parameterType="BoardDto">
+        UPDATE board
+        SET   title = #{title}
+          , content = #{content}
+          , up_date = now()
+        WHERE bno = #{bno} and writer = #{writer}
+    </update>
+
+    <update id="increaseViewCnt" parameterType="int">
+        UPDATE board
+        SET   view_cnt = view_cnt + 1
+        WHERE bno = #{bno}
+    </update>
+
+    <sql id="searchCondition">
+        <choose>
+            <when test='option=="T"'>
+                AND title LIKE concat('%', #{keyword}, '%')
+            </when>
+            <when test='option=="W"'>
+                AND writer LIKE concat('%', #{keyword}, '%')
+            </when>
+            <otherwise>
+                AND (title LIKE concat('%', #{keyword}, '%')
+                OR content LIKE concat('%', #{keyword}, '%'))
+            </otherwise>
+        </choose>
+    </sql>
+
+    <select id="searchSelectPage" parameterType="SearchCondition" resultType="BoardDto">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM board
+        WHERE true
+        <include refid="searchCondition"/>
+        ORDER BY reg_date DESC, bno DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="searchResultCnt" parameterType="SearchCondition" resultType="int">
+        SELECT count(*)
+        FROM board
+        WHERE true
+        <include refid="searchCondition"/>
+    </select>
+    
+    <update id="updateCommentCnt" parameterType="map">
+        UPDATE board
+        SET comment_cnt = comment_cnt + #{cnt}
+        WHERE bno = #{bno}
+    </update>
+
+
+
+    <!-- 공지사항 처리 -->
+
+
+
+    <select id="noticecount" resultType="int">
+        SELECT count(*) FROM noticeboard
+    </select>
+
+    <delete id="noticedeleteall">
+        DELETE FROM noticeboard
+    </delete>
+
+    <delete id="noticedelete" parameterType="map">
+        DELETE FROM noticeboard WHERE bno = #{bno} and writer = #{writer}
+    </delete>
+
+    <insert id="noticeinsert" parameterType="BoardDto">
+        INSERT INTO noticeboard
+            (title, content, writer)
+        VALUES
+            (#{title}, #{content}, #{writer})
+    </insert>
+
+    <select id="noticeselectall" resultType="BoardDto">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM noticeboard
+        ORDER BY reg_date DESC, bno DESC
+    </select>
+
+    <sql id="noticeselectfromboard">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM noticeboard
+    </sql>
+
+    <select id="noticeselect" parameterType="int" resultType="BoardDto">
+        <include refid="noticeselectfromboard"/>
+        WHERE bno = #{bno}
+    </select>
+
+    <select id="noticeselectpage" parameterType="map" resultType="BoardDto">
+        <include refid="noticeselectfromboard"/>
+        ORDER BY reg_date DESC, bno DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <update id="noticeupdate" parameterType="BoardDto">
+        UPDATE noticeboard
+        SET   title = #{title}
+          , content = #{content}
+          , up_date = now()
+        WHERE bno = #{bno} and writer = #{writer}
+    </update>
+
+    <update id="noticeincreaseviewcnt" parameterType="int">
+        UPDATE noticeboard
+        SET   view_cnt = view_cnt + 1
+        WHERE bno = #{bno}
+    </update>
+
+    <select id="noticesearchselectpage" parameterType="SearchCondition" resultType="BoardDto">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM noticeboard
+        WHERE true
+        <include refid="searchCondition" />
+        ORDER BY reg_date DESC, bno DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="noticesearchresultcnt" parameterType="SearchCondition" resultType="int">
+        SELECT count(*)
+        FROM noticeboard
+        WHERE true
+        <include refid="searchCondition" />
+    </select>
+
+    <update id="noticeupdatecommentcnt" parameterType="map">
+        UPDATE noticeboard
+        SET comment_cnt = comment_cnt + #{cnt}
+        WHERE bno = #{bno}
+    </update>
+
+
+
+    <!-- 정보공유 게시판 처리 -->
+
+
+
+    <select id="infocount" resultType="int">
+        SELECT count(*) FROM infoboard
+    </select>
+
+    <delete id="infodeleteall">
+        DELETE FROM infoboard
+    </delete>
+
+    <delete id="infodelete" parameterType="map">
+        DELETE FROM infoboard WHERE bno = #{bno} and writer = #{writer}
+    </delete>
+
+    <insert id="infoinsert" parameterType="BoardDto">
+        INSERT INTO infoboard
+            (title, content, writer)
+        VALUES
+            (#{title}, #{content}, #{writer})
+    </insert>
+
+    <select id="infoselectall" resultType="BoardDto">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM infoboard
+        ORDER BY reg_date DESC, bno DESC
+    </select>
+
+    <sql id="infoselectfromboard">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM infoboard
+    </sql>
+
+    <select id="infoselect" parameterType="int" resultType="BoardDto">
+        <include refid="infoselectfromboard"/>
+        WHERE bno = #{bno}
+    </select>
+
+    <select id="infoselectpage" parameterType="map" resultType="BoardDto">
+        <include refid="infoselectfromboard"/>
+        ORDER BY reg_date DESC, bno DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <update id="infoupdate" parameterType="BoardDto">
+        UPDATE infoboard
+        SET   title = #{title}
+          , content = #{content}
+          , up_date = now()
+        WHERE bno = #{bno} and writer = #{writer}
+    </update>
+
+    <update id="infoincreaseviewcnt" parameterType="int">
+        UPDATE infoboard
+        SET   view_cnt = view_cnt + 1
+        WHERE bno = #{bno}
+    </update>
+
+    <select id="infosearchselectpage" parameterType="SearchCondition" resultType="BoardDto">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM infoboard
+        WHERE true
+        <include refid="searchCondition" />
+        ORDER BY reg_date DESC, bno DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="infosearchresultcnt" parameterType="SearchCondition" resultType="int">
+        SELECT count(*)
+        FROM infoboard
+        WHERE true
+        <include refid="searchCondition" />
+    </select>
+
+    <update id="infoupdatecommentcnt" parameterType="map">
+        UPDATE infoboard
+        SET comment_cnt = comment_cnt + #{cnt}
+        WHERE bno = #{bno}
+    </update>
+
+
+
+    <!-- 질문과답변 게시판 처리 -->
+
+
+
+    <select id="questioncount" resultType="int">
+        SELECT count(*) FROM questionboard
+    </select>
+
+    <delete id="questiondeleteall">
+        DELETE FROM questionboard
+    </delete>
+
+    <delete id="questiondelete" parameterType="map">
+        DELETE FROM questionboard WHERE bno = #{bno} and writer = #{writer}
+    </delete>
+
+    <insert id="questioninsert" parameterType="BoardDto">
+        INSERT INTO questionboard
+            (title, content, writer)
+        VALUES
+            (#{title}, #{content}, #{writer})
+    </insert>
+
+    <select id="questionselectall" resultType="BoardDto">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM questionboard
+        ORDER BY reg_date DESC, bno DESC
+    </select>
+
+    <sql id="questionselectfromboard">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM questionboard
+    </sql>
+
+    <select id="questionselect" parameterType="int" resultType="BoardDto">
+        <include refid="questionselectfromboard"/>
+        WHERE bno = #{bno}
+    </select>
+
+    <select id="questionselectpage" parameterType="map" resultType="BoardDto">
+        <include refid="questionselectfromboard"/>
+        ORDER BY reg_date DESC, bno DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <update id="questionupdate" parameterType="BoardDto">
+        UPDATE questionboard
+        SET   title = #{title}
+          , content = #{content}
+          , up_date = now()
+        WHERE bno = #{bno} and writer = #{writer}
+    </update>
+
+    <update id="questionincreaseviewcnt" parameterType="int">
+        UPDATE questionboard
+        SET   view_cnt = view_cnt + 1
+        WHERE bno = #{bno}
+    </update>
+
+    <select id="questionsearchselectpage" parameterType="SearchCondition" resultType="BoardDto">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM questionboard
+        WHERE true
+        <include refid="searchCondition" />
+        ORDER BY reg_date DESC, bno DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="questionsearchresultcnt" parameterType="SearchCondition" resultType="int">
+        SELECT count(*)
+        FROM questionboard
+        WHERE true
+        <include refid="searchCondition" />
+    </select>
+
+    <update id="questionupdatecommentcnt" parameterType="map">
+        UPDATE questionboard
+        SET comment_cnt = comment_cnt + #{cnt}
+        WHERE bno = #{bno}
+    </update>
+
+
+
+    <!-- 데일리룩 게시판 처리 -->
+
+
+
+    <select id="dailycount" resultType="int">
+        SELECT count(*) FROM dailyboard
+    </select>
+
+    <delete id="dailydeleteall">
+        DELETE FROM dailyboard
+    </delete>
+
+    <delete id="dailydelete" parameterType="map">
+        DELETE FROM dailyboard WHERE bno = #{bno} and writer = #{writer}
+    </delete>
+
+    <insert id="dailyinsert" parameterType="BoardDto">
+        INSERT INTO dailyboard
+            (title, content, writer)
+        VALUES
+            (#{title}, #{content}, #{writer})
+    </insert>
+
+    <select id="dailyselectall" resultType="BoardDto">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM dailyboard
+        ORDER BY reg_date DESC, bno DESC
+    </select>
+
+    <sql id="dailyselectfromboard">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM dailyboard
+    </sql>
+
+    <select id="dailyselect" parameterType="int" resultType="BoardDto">
+        <include refid="dailyselectfromboard"/>
+        WHERE bno = #{bno}
+    </select>
+
+    <select id="dailyselectpage" parameterType="map" resultType="BoardDto">
+        <include refid="dailyselectfromboard"/>
+        ORDER BY reg_date DESC, bno DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <update id="dailyupdate" parameterType="BoardDto">
+        UPDATE dailyboard
+        SET   title = #{title}
+          , content = #{content}
+          , up_date = now()
+        WHERE bno = #{bno} and writer = #{writer}
+    </update>
+
+    <update id="dailyincreaseviewcnt" parameterType="int">
+        UPDATE dailyboard
+        SET   view_cnt = view_cnt + 1
+        WHERE bno = #{bno}
+    </update>
+
+    <select id="dailysearchselectpage" parameterType="SearchCondition" resultType="BoardDto">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM dailyboard
+        WHERE true
+        <include refid="searchCondition" />
+        ORDER BY reg_date DESC, bno DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="dailysearchresultcnt" parameterType="SearchCondition" resultType="int">
+        SELECT count(*)
+        FROM dailyboard
+        WHERE true
+        <include refid="searchCondition" />
+    </select>
+
+    <update id="dailyupdatecommentcnt" parameterType="map">
+        UPDATE dailyboard
+        SET comment_cnt = comment_cnt + #{cnt}
+        WHERE bno = #{bno}
+    </update>
+
+</mapper>
