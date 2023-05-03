@@ -26,7 +26,7 @@
 
     1. 개발 언어 : JAVA 11, HTML/CSS, JavaScript
     
-    2. 서버 : Apache Tomcat 9.0
+    2. 서버 : Apache Tomcat 9.0, AWS EC2
     
     3. 프레임워크 : Spring Framework, MyBatis
     
