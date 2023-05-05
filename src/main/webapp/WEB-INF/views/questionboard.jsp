@@ -233,7 +233,7 @@
 
         $("#modBtn").click(function(){
             let cno = $(this).attr("data-cno");
-            let comment = $("input[name=comment]").val();
+            let comment = $("input[name=comment]").val().replace(/\</g, "&lt;").replace(/\>/g, "&gt;");
 
             if(comment.trim()=='') {
                 alert("댓글을 입력해주세요.");
@@ -255,7 +255,7 @@
         });
 
         $("#wrtRepBtn").click(function(){
-            let comment = $("input[name=replyComment]").val();
+            let comment = $("input[name=replyComment]").val().replace(/\</g, "&lt;").replace(/\>/g, "&gt;");
             let pcno = $("#replyForm").parent().attr("data-pcno");
 
             if(comment.trim()=='') {
@@ -282,7 +282,7 @@
         });
 
         $("#sendBtn").click(function(){
-            let comment = $("input[name=comment]").val();
+            let comment = $("input[name=comment]").val().replace(/\</g, "&lt;").replace(/\>/g, "&gt;");
 
             if(comment.trim()=='') {
                 alert("댓글을 입력해주세요.");
