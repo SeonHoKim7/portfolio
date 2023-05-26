@@ -1,6 +1,6 @@
 # Portfolio
 
-### Demo : http://3.39.191.25:8080/Portfolio/
+### Demo (AWS EC2 배포) : http://3.39.191.25:8080/Portfolio/
 
     테스트 계정 : 아이디 asdf, 비밀번호 1234
     
